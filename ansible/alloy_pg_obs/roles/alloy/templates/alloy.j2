@@ -1,0 +1,83 @@
+{% for db in postgres_databases %}
+prometheus.exporter.postgres "integrations_postgres_exporter_{{ db.name }}" {
+  data_source_names = [env("POSTGRES_DSN_{{ db.name | upper }}")]
+  enabled_collectors = ["stat_statements"]
+
+  autodiscovery {
+    enabled = true
+    database_denylist = ["rdsadmin"]
+  }
+}
+
+database_observability.postgres "postgres_{{ db.name }}" {
+  data_source_name  = env("POSTGRES_DSN_{{ db.name | upper }}")
+  forward_to        = [loki.relabel.database_observability_postgres_{{ db.name }}.receiver]
+  targets           = prometheus.exporter.postgres.integrations_postgres_exporter_{{ db.name }}.targets
+}
+
+loki.relabel "database_observability_postgres_{{ db.name }}" {
+  forward_to = [loki.write.logs_service.receiver]
+
+  rule {
+    target_label = "instance"
+    replacement  = "{{ db.name }}"
+  }
+}
+
+discovery.relabel "database_observability_postgres_{{ db.name }}" {
+  targets = database_observability.postgres.postgres_{{ db.name }}.targets
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/db-o11y"
+  }
+
+  rule {
+    target_label = "instance"
+    replacement  = "{{ db.name }}"
+  }
+}
+
+prometheus.scrape "database_observability_postgres_{{ db.name }}" {
+  targets    = discovery.relabel.database_observability_postgres_{{ db.name }}.output
+  job_name   = "integrations/{{ db.name }}"
+  forward_to = [prometheus.remote_write.metrics_service.receiver]
+}
+{% endfor %}
+
+
+prometheus.remote_write "metrics_service" {
+  endpoint {
+    url = "{{ prom_remote_write.url }}"
+{% if prom_remote_write.basic_auth is defined %}
+    basic_auth {
+      username = "{{ prom_remote_write.basic_auth.username }}"
+      password = "{{ prom_remote_write.basic_auth.password }}"
+    }
+{% endif %}
+
+    queue_config {
+      max_samples_per_send = 1000
+      capacity = 10000
+      max_shards = 200
+      min_shards = 1
+      batch_send_deadline = "5s"
+    }
+  }
+}
+
+loki.write "logs_service" {
+  endpoint {
+    url = sys.env("LOKI_URL")
+{% if loki.basic_auth is defined %}
+    basic_auth {
+      username = sys.env("LOKI_USERNAME")
+      password = sys.env("LOKI_PASSWORD")
+    }
+{% endif %}
+
+    queue_config {
+      capacity = "10MiB"
+    }
+  }
+}

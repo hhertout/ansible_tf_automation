@@ -1,0 +1,35 @@
+# Deployment method - set to 'docker_compose' as default
+deploy_method: docker_compose
+
+workdir: /Users/hugues/devops/alloy_pg_obs/.test
+
+# PostgreSQL admin credentials for monitoring
+monitoring_user: db-o11y
+monitoring_password: o11y_password
+
+# PostgreSQL databases to monitor
+postgres_databases:
+  - name: "pg_test"
+    # Admin credentials for setup the database
+    admin_user: pgadmin
+    admin_password: pgadmin
+    # Host for Ansible to connect to (from host machine)
+    host: localhost
+    # Host for Alloy/Docker to connect to (from container network)
+    # Useful if the pg database is running in another container
+    alloy_host: postgres
+    port: 5432
+    database: test_db
+    collectors: '["query_details", "query_samples", "schema_details"]'
+  
+  # Example: Add more databases like this:
+  # - name: "pg_prod"
+  #   admin_user: pgadmin
+  #   admin_password: prodpassword
+  #   host: 192.168.1.100
+  #   port: 5432
+  #   database: production
+  #   monitoring_user: db-o11y
+  #   monitoring_password: o11y_password
+  #   conn_string: "postgres://{{ monitoring_user }}:{{ monitoring_password }}@192.168.1.100:5432/production?sslmode=disable"
+  #   collectors: '["query_details", "query_samples", "schema_details"]'

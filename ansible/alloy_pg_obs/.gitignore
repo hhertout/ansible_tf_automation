@@ -1,0 +1,15 @@
+.test/
+.DS_Store
+.vscode/
+node_modules/
+.env
+.env.local
+.env.*.local
+*.log
+*.sqlite
+*.pyc
+__pycache__/
+.venv/
+venv/
+.idea/
+*.iml

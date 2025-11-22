@@ -1,0 +1,58 @@
+---
+- name: Install PostgreSQL Python library
+  ansible.builtin.pip:
+    name: psycopg2-binary
+    state: present
+    executable: "{{ ansible_python_interpreter | dirname }}/pip3"
+
+- name: Enable pg_stat_statements extension
+  community.postgresql.postgresql_query:
+    login_db: "{{ item.database }}"
+    login_host: "{{ item.host }}"
+    login_port: "{{ item.port }}"
+    login_user: "{{ item.admin_user }}"
+    login_password: "{{ item.admin_password }}"
+    query: CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+  loop: "{{ postgres_databases }}"
+
+- name: Create monitoring user
+  community.postgresql.postgresql_user:
+    name: "{{ monitoring_user }}"
+    password: "{{ monitoring_password }}"
+    db: "{{ item.database }}"
+    login_host: "{{ item.host }}"
+    login_port: "{{ item.port }}"
+    login_user: "{{ item.admin_user }}"
+    login_password: "{{ item.admin_password }}"
+    state: present
+  loop: "{{ postgres_databases }}"
+
+- name: Grant pg_monitor role
+  community.postgresql.postgresql_query:
+    login_db: "{{ item.database }}"
+    login_host: "{{ item.host }}"
+    login_port: "{{ item.port }}"
+    login_user: "{{ item.admin_user }}"
+    login_password: "{{ item.admin_password }}"
+    query: GRANT pg_monitor TO "{{ monitoring_user }}";
+  loop: "{{ postgres_databases }}"
+
+- name: Grant pg_read_all_stats role
+  community.postgresql.postgresql_query:
+    login_db: "{{ item.database }}"
+    login_host: "{{ item.host }}"
+    login_port: "{{ item.port }}"
+    login_user: "{{ item.admin_user }}"
+    login_password: "{{ item.admin_password }}"
+    query: GRANT pg_read_all_stats TO "{{ monitoring_user }}";
+  loop: "{{ postgres_databases }}"
+
+- name: Grant pg_read_all_data role
+  community.postgresql.postgresql_query:
+    login_db: "{{ item.database }}"
+    login_host: "{{ item.host }}"
+    login_port: "{{ item.port }}"
+    login_user: "{{ item.admin_user }}"
+    login_password: "{{ item.admin_password }}"
+    query: GRANT pg_read_all_data TO "{{ monitoring_user }}";
+  loop: "{{ postgres_databases }}"

@@ -1,0 +1,47 @@
+- name: Ensure working directory exists
+  ansible.builtin.file:
+    path: "{{ workdir }}"
+    state: directory
+    mode: '0755'
+
+- name: Validate database names format
+  ansible.builtin.assert:
+    that:
+      - item.name is match('^[a-z0-9_]+$')
+      - item.name is not search(' ')
+      - item.name is not search('-')
+    fail_msg: "Database name '{{ item.name }}' is invalid. Must be lowercase, no spaces, use underscores only (no hyphens)."
+    success_msg: "Database name '{{ item.name }}' is valid."
+  loop: "{{ postgres_databases }}"
+  loop_control:
+    label: "{{ item.name }}"
+
+- name: Build connection strings for databases
+  ansible.builtin.set_fact:
+    postgres_databases_with_conn: "{{ postgres_databases_with_conn | default([]) + [item | combine({'conn_string': 'postgres://' + monitoring_user + ':' + monitoring_password + '@' + item.alloy_host + ':' + (item.port | string) + '/' + item.database + '?sslmode=disable'})] }}"
+  loop: "{{ postgres_databases }}"
+
+- name: Push docker-compose file
+  ansible.builtin.template:
+    src: docker-compose.j2
+    dest: "{{ workdir }}/docker-compose.yaml"
+    mode: '0644'
+
+- name: Push alloy configuration file
+  ansible.builtin.template:
+    src: alloy.j2
+    dest: "{{ workdir }}/conf.alloy"
+    mode: '0644'
+
+- name: Stop existing alloy containers
+  ansible.builtin.command:
+    cmd: docker compose down
+    chdir: "{{ workdir }}"
+  ignore_errors: true
+
+- name: Deploy alloy with docker-compose
+  ansible.builtin.command:
+    cmd: docker compose up -d
+    chdir: "{{ workdir }}"
+  register: docker_compose_result
+  changed_when: "'Started' in docker_compose_result.stdout or 'Created' in docker_compose_result.stdout"

@@ -1,0 +1,30 @@
+services:
+  alloy:
+    image: {{ alloy_image }}
+    container_name: alloy
+    command:
+      - run
+      - /etc/alloy/conf.alloy
+      - --storage.path=/var/lib/alloy/data
+      - --server.http.listen-addr=0.0.0.0:12345
+      - --stability.level=experimental
+    ports:
+      - "12345:12345"
+    volumes:
+      - ./conf.alloy:/etc/alloy/conf.alloy:ro
+    restart: unless-stopped
+    environment:
+      - ALLOY_LOG_LEVEL=info
+      - LOKI_URL={{ loki.url }}
+      - LOKI_USERNAME={{ loki.basic_auth.username }}
+      - LOKI_PASSWORD={{ loki.basic_auth.password }}
+{% for db in postgres_databases_with_conn %}
+      - POSTGRES_DSN_{{ db.name | upper }}=postgres://{{ monitoring_user }}:{{ monitoring_password }}@{{ db.alloy_host }}:{{ db.port }}/{{ db.database }}?sslmode=disable
+{% endfor %}
+    networks:
+      - testdata_monitoring
+
+networks:
+  testdata_monitoring:
+    name: testdata_monitoring
+    external: true

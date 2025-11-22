@@ -1,0 +1,8 @@
+---
+- name: Include docker_compose tasks
+  include_tasks: docker_compose.yaml
+  when: deploy_method == 'docker_compose'
+
+- name: Include kubernetes tasks
+  include_tasks: kubernetes.yaml
+  when: deploy_method == 'kubernetes'

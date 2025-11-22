@@ -1,0 +1,1227 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 0,
+  "id": 0,
+  "links": [],
+  "panels": [
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bf4wn4jnzyi9sf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 2,
+        "w": 24,
+        "x": 0,
+        "y": 0
+      },
+      "id": 14,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "area",
+        "justifyMode": "center",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^engine$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "value",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "database_observability_connection_info{job=\"$job\"}",
+          "format": "table",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "bf4wn4jnzyi9sf"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 0,
+        "y": 2
+      },
+      "id": 13,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "/^engine_version$/",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "database_observability_connection_info{job=\"$job\"}",
+          "format": "table",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "version",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 4,
+        "y": 2
+      },
+      "id": 1,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${ds_metrics}"
+          },
+          "editorMode": "code",
+          "expr": "last_over_time((count(count by (server_id) (mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", } or pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", })))[$__range:])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Instances",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 8,
+        "y": 2
+      },
+      "id": 2,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "last_over_time((count(count by (schema, server_id) (mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }) or count by (datname, server_id) (pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", })))[$__range:])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Databases",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 12,
+        "y": 2
+      },
+      "id": 3,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "count(count_over_time({job=\"$job\", op=\"table_detection\"} | logfmt | table=~\".+\"  [15m]))",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "tables",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 16,
+        "y": 2
+      },
+      "id": 4,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "round(sum(increase(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__range]) or increase(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__range])))",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "total queries",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 3,
+        "w": 4,
+        "x": 20,
+        "y": 2
+      },
+      "id": 5,
+      "options": {
+        "colorMode": "value",
+        "graphMode": "none",
+        "justifyMode": "auto",
+        "orientation": "auto",
+        "percentChangeColorMode": "standard",
+        "reduceOptions": {
+          "calcs": [
+            "lastNotNull"
+          ],
+          "fields": "",
+          "values": false
+        },
+        "showPercentChange": false,
+        "textMode": "auto",
+        "wideLayout": true
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "last_over_time((sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval]) or rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval])))[$__range:])",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "current rate",
+      "type": "stat"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "description": "The result is the average time spent per query, giving insight into how long queries take on average and helping identify performance bottlenecks.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 0,
+        "y": 5
+      },
+      "id": 6,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "(sum(rate(mysql_perf_schema_events_statements_seconds_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:]))) / (sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:]))) * 60 or (sum(rate(pg_stat_statements_seconds_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))) / (sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))) * 60",
+          "legendFormat": "duration",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Average Query Duration",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "description": "Current ratio of errors. This panel does not show errors from PostgreSQL queries.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 8,
+        "y": 5
+      },
+      "id": 7,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "(\n            (\n            rate(sum(mysql_perf_schema_events_statements_errors_total{job=~\"$job\", digest=~\".*\", })[$__rate_interval:])\n            ) /\n            (\n              rate(sum(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", })[$__rate_interval:])\n            )\n          ) * 100",
+          "legendFormat": "__auto",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Errors",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "prometheus",
+        "uid": "${ds_metrics}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "never",
+            "showValues": false,
+            "spanNulls": true,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "calls/sec"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 8,
+        "x": 16,
+        "y": 5
+      },
+      "id": 8,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "editorMode": "code",
+          "expr": "sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:])) or sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))",
+          "legendFormat": "rate",
+          "range": true,
+          "refId": "A"
+        }
+      ],
+      "title": "Rate",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "description": "This panel displays the total wait time, grouped into the main wait categories: IO, Lock, and Network. Loki logs are parsed to extract valid wait_event entries, convert their duration into seconds, and sum them over the selected time range. Various wait event types and names are normalized into unified categories to provide a clear, consolidated view of PostgreSQL wait behavior.\n\nIn summary:\n\nIO Wait — Waiting on disk operations (files, tables, syncs, etc.)\n\nLock Wait — Waiting due to locks or internal locking mechanisms (Lock, LWLock, Activity, etc.)\n\nNetwork Wait — Waiting on client interactions or network sockets\n\nThis panel helps identify which wait categories contribute most to database latency and supports diagnosing performance bottlenecks.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 9,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by (wait_event_type) (label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(sum_over_time({job=\"$job\", op=\"wait_event\", server_id!=\"\"} | logfmt | wait_time>=0ms | (wait_event_type=~\"(IO)|(Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin)|(Client)\" or wait_event_name=~\"(wait/io/(file|table).+)|(wait/((io/lock|synch)|lock).+)|(wait/io/socket.+)\") | unwrap duration_seconds(wait_time)[$__auto]), \"wait_event_type\", \"IO Wait\", \"wait_event_type\", \"IO\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_type\", \"Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin\"), \"wait_event_type\", \"Network Wait\", \"wait_event_type\", \"Client\"), \"wait_event_type\", \"IO Wait\", \"wait_event_name\", \"wait/io/(file|table).+\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_name\", \"wait/((io/lock|synch)|lock).+\"), \"wait_event_type\", \"Network Wait\", \"wait_event_name\", \"wait/io/socket.+\")) > 0",
+          "legendFormat": "{{wait_event_type}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Cumulative duration of wait events by group / type",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "description": "This panel shows the total PostgreSQL wait time per wait event name. \n\nThis visualization helps identify the specific wait events (e.g., IO operations, locks, network waits, buffer operations, etc.) that contribute most to database latency, offering fine-grained insight into potential performance bottlenecks.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 20
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by (wait_event_name) (sum_over_time({job=\"$job\", op=\"wait_event\", server_id!=\"\"} | logfmt | wait_time>=0ms | unwrap duration_seconds(wait_time)[$__auto]))",
+          "legendFormat": "{{wait_event_name}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Wait Events Duration Breakdown",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "description": "This panel displays the average PostgreSQL wait time per wait category (IO, Lock, Network).\n\nWait events from PostgreSQL logs are parsed, filtered, and normalized so that various event types and names are grouped into consistent categories:\n\nIO Wait — Disk and file-related waits\n\nLock Wait — Locking, LWLock, and internal synchronization waits\n\nNetwork Wait — Client or socket-related waits\n\nThe result is an average wait time per event, allowing you to see not just how long PostgreSQL waits overall, but how expensive each individual wait event is on average. This helps pinpoint categories where each wait is particularly costly and may indicate deeper performance issues.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          },
+          "unit": "s"
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 27
+      },
+      "id": 12,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "(sum by (wait_event_type) (label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(sum_over_time({job=\"$job\", op=\"wait_event\", server_id!=\"\"} | logfmt | wait_time>=0ms | (wait_event_type=~\"(IO)|(Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin)|(Client)\" or wait_event_name=~\"(wait/io/(file|table).+)|(wait/((io/lock|synch)|lock).+)|(wait/io/socket.+)\") | unwrap duration_seconds(wait_time)[$__auto]), \"wait_event_type\", \"IO Wait\", \"wait_event_type\", \"IO\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_type\", \"Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin\"), \"wait_event_type\", \"Network Wait\", \"wait_event_type\", \"Client\"), \"wait_event_type\", \"IO Wait\", \"wait_event_name\", \"wait/io/(file|table).+\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_name\", \"wait/((io/lock|synch)|lock).+\"), \"wait_event_type\", \"Network Wait\", \"wait_event_name\", \"wait/io/socket.+\"))) / (sum by (wait_event_type) (label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(count_over_time({job=\"$job\", op=\"wait_event\", server_id!=\"\"} | logfmt | wait_time>=0ms | (wait_event_type=~\"(IO)|(Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin)|(Client)\" or wait_event_name=~\"(wait/io/(file|table).+)|(wait/((io/lock|synch)|lock).+)|(wait/io/socket.+)\") [$__auto]), \"wait_event_type\", \"IO Wait\", \"wait_event_type\", \"IO\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_type\", \"Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin\"), \"wait_event_type\", \"Network Wait\", \"wait_event_type\", \"Client\"), \"wait_event_type\", \"IO Wait\", \"wait_event_name\", \"wait/io/(file|table).+\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_name\", \"wait/((io/lock|synch)|lock).+\"), \"wait_event_type\", \"Network Wait\", \"wait_event_name\", \"wait/io/socket.+\")))",
+          "legendFormat": "{{wait_event_type}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Wait events duration by group",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "description": "This panel shows the number of PostgreSQL wait events per wait category (IO, Lock, Network) over the selected time range.\n\nDifferent event types and names are normalized into three main categories:\n\nIO Wait — Disk and file-related waits\n\nLock Wait — Locks, LWLocks, and internal synchronization waits\n\nNetwork Wait — Client or socket-related waits\n\nThis panel provides insight into how frequently PostgreSQL encounters each type of wait, helping identify which categories contribute most to database latency in terms of occurrence, not duration.",
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisBorderShow": false,
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisLabel": "",
+            "axisPlacement": "auto",
+            "barAlignment": 0,
+            "barWidthFactor": 0.6,
+            "drawStyle": "bars",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "showValues": false,
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 24,
+        "x": 0,
+        "y": 34
+      },
+      "id": 10,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "hideZeros": false,
+          "mode": "single",
+          "sort": "none"
+        }
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "code",
+          "expr": "sum by (wait_event_type) (label_replace(label_replace(label_replace(label_replace(label_replace(label_replace(count_over_time({job=\"$job\", op=\"wait_event\", server_id!=\"\"} | logfmt | wait_time>=0ms | (wait_event_type=~\"(IO)|(Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin)|(Client)\" or wait_event_name=~\"(wait/io/(file|table).+)|(wait/((io/lock|synch)|lock).+)|(wait/io/socket.+)\") [$__auto]), \"wait_event_type\", \"IO Wait\", \"wait_event_type\", \"IO\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_type\", \"Lock|LWLock|Activity|Extension|InjectionPoint|IPC|Timeout|BufferPin\"), \"wait_event_type\", \"Network Wait\", \"wait_event_type\", \"Client\"), \"wait_event_type\", \"IO Wait\", \"wait_event_name\", \"wait/io/(file|table).+\"), \"wait_event_type\", \"Lock Wait\", \"wait_event_name\", \"wait/((io/lock|synch)|lock).+\"), \"wait_event_type\", \"Network Wait\", \"wait_event_name\", \"wait/io/socket.+\"))",
+          "legendFormat": "{{wait_event_type}}",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Number of wait events",
+      "type": "timeseries"
+    }
+  ],
+  "preload": false,
+  "schemaVersion": 42,
+  "tags": [
+    "database",
+    "postgresql",
+    "mysql"
+  ],
+  "templating": {
+    "list": [
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "prometheus",
+          "value": "bf4wn4jnzyi9sf"
+        },
+        "label": "datasource_metric",
+        "name": "ds_metrics",
+        "options": [],
+        "query": "prometheus",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "loki",
+          "value": "ef4wpkvzmfvnkb"
+        },
+        "label": "datasource_logs",
+        "name": "ds_logs",
+        "options": [],
+        "query": "loki",
+        "refresh": 1,
+        "regex": "",
+        "type": "datasource"
+      },
+      {
+        "allowCustomValue": false,
+        "current": {
+          "text": "integrations/db-o11y",
+          "value": "integrations/db-o11y"
+        },
+        "definition": "label_values(database_observability_connection_info,job)",
+        "label": "job",
+        "name": "job",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(database_observability_connection_info,job)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-30m",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "browser",
+  "title": "Database Observability - Queries overview",
+  "uid": "ad6sc77",
+  "version": 69
+}

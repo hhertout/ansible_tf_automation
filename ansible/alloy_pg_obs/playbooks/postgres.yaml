@@ -1,0 +1,12 @@
+---
+- become: false
+  hosts: localhost
+  gather_facts: false
+  tasks:
+    - name: Check deployment target method
+      debug:
+        msg: "Deployment method is set to '{{ deploy_method }}'"
+      failed_when: deploy_method not in ['kubernetes', 'docker_compose']       
+  roles:
+    - postgres
+    - alloy

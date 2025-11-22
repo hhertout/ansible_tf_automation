@@ -54,4 +54,4 @@ metrics_generator:
   storage:
     path: "/tmp/tempo"
     remote_write:
-      - url: "http://mimir-service:9002/api/v1/write"
+      - url: "http://mimir-service:9009/api/v1/write"

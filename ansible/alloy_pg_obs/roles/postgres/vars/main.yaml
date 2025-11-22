@@ -1,0 +1,5 @@
+pg_user: "pgadmin"
+pg_password: "pgadmin"
+
+postgres_alloy_user: db-o11y
+postgres_alloy_password: o11y_password

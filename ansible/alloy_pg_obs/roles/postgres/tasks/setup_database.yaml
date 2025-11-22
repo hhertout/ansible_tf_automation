@@ -1,0 +1,47 @@
+---
+- name: Enable pg_stat_statements extension on {{ pgdb.name }}
+  community.postgresql.postgresql_query:
+    database: "{{ pgdb.database }}"
+    login_host: "{{ pgdb.host }}"
+    login_port: "{{ pgdb.port }}"
+    login_user: "{{ pgdb.admin_user }}"
+    login_password: "{{ pgdb.admin_password }}"
+    query: CREATE EXTENSION IF NOT EXISTS pg_stat_statements;
+
+- name: Create monitoring user for {{ pgdb.name }}
+  community.postgresql.postgresql_user:
+    name: "{{ monitoring_user }}"
+    password: "{{ monitoring_password }}"
+    database: "{{ pgdb.database }}"
+    login_host: "{{ pgdb.host }}"
+    login_port: "{{ pgdb.port }}"
+    login_user: "{{ pgdb.admin_user }}"
+    login_password: "{{ pgdb.admin_password }}"
+    state: present
+
+- name: Grant pg_monitor role to {{ monitoring_user }} on {{ pgdb.name }}
+  community.postgresql.postgresql_query:
+    database: "{{ pgdb.database }}"
+    login_host: "{{ pgdb.host }}"
+    login_port: "{{ pgdb.port }}"
+    login_user: "{{ pgdb.admin_user }}"
+    login_password: "{{ pgdb.admin_password }}"
+    query: GRANT pg_monitor TO "{{ monitoring_user }}";
+
+- name: Grant pg_read_all_stats role to {{ monitoring_user }} on {{ pgdb.name }}
+  community.postgresql.postgresql_query:
+    database: "{{ pgdb.database }}"
+    login_host: "{{ pgdb.host }}"
+    login_port: "{{ pgdb.port }}"
+    login_user: "{{ pgdb.admin_user }}"
+    login_password: "{{ pgdb.admin_password }}"
+    query: GRANT pg_read_all_stats TO "{{ monitoring_user }}";
+
+- name: Grant pg_read_all_data role to {{ monitoring_user }} on {{ pgdb.name }}
+  community.postgresql.postgresql_query:
+    database: "{{ pgdb.database }}"
+    login_host: "{{ pgdb.host }}"
+    login_port: "{{ pgdb.port }}"
+    login_user: "{{ pgdb.admin_user }}"
+    login_password: "{{ pgdb.admin_password }}"
+    query: GRANT pg_read_all_data TO "{{ item['monitoring_user'] }}";
