@@ -18,7 +18,7 @@
 
 - name: Build connection strings for databases
   ansible.builtin.set_fact:
-    postgres_databases_with_conn: "{{ postgres_databases_with_conn | default([]) + [item | combine({'conn_string': 'postgres://' + monitoring_user + ':' + monitoring_password + '@' + item.alloy_host + ':' + (item.port | string) + '/' + item.database + '?sslmode=disable'})] }}"
+    postgres_databases_with_conn: "{{ postgres_databases_with_conn | default([]) + [item | combine({'conn_string': 'postgres://' + (monitoring_user | urlencode) + ':' + (monitoring_password | urlencode) + '@' + item.alloy_host + ':' + (item.port | string) + '/' + item.database + '?sslmode=disable'})] }}"
   loop: "{{ postgres_databases }}"
 
 - name: Push docker-compose file
