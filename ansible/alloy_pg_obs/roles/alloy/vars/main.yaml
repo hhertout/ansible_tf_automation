@@ -9,7 +9,7 @@ prom_remote_write:
 
 loki:
   url: "http://loki:3100/loki/api/v1/push"
-  basic_auth:
-    username: "loki_user"
-    password: "loki_pass"
+  #basic_auth:
+  #  username: "loki_user"
+  #  password: "loki_pass"
   disable_tls: false

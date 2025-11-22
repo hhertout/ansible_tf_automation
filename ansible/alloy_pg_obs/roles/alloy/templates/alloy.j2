@@ -13,6 +13,7 @@ database_observability.postgres "postgres_{{ db.name }}" {
   data_source_name  = env("POSTGRES_DSN_{{ db.name | upper }}")
   forward_to        = [loki.relabel.database_observability_postgres_{{ db.name }}.receiver]
   targets           = prometheus.exporter.postgres.integrations_postgres_exporter_{{ db.name }}.targets
+  enable_collectors = ["query_details", "query_samples", "schema_details"]
 }
 
 loki.relabel "database_observability_postgres_{{ db.name }}" {
@@ -22,6 +23,11 @@ loki.relabel "database_observability_postgres_{{ db.name }}" {
     target_label = "instance"
     replacement  = "{{ db.name }}"
   }
+
+  rule {
+    target_label = "job"
+    replacement  = "integrations/db-{{ db.name }}"
+  }
 }
 
 discovery.relabel "database_observability_postgres_{{ db.name }}" {
@@ -29,7 +35,7 @@ discovery.relabel "database_observability_postgres_{{ db.name }}" {
 
   rule {
     target_label = "job"
-    replacement  = "integrations/db-o11y"
+    replacement  = "integrations/db-{{ db.name }}"
   }
 
   rule {

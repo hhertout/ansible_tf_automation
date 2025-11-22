@@ -1,7 +1,7 @@
 # Deployment method - set to 'docker_compose' as default
 deploy_method: docker_compose
 
-workdir: /Users/hugues/devops/alloy_pg_obs/.test
+workdir: "/tmp/alloy_pg_obs"
 
 # PostgreSQL admin credentials for monitoring
 monitoring_user: db-o11y
