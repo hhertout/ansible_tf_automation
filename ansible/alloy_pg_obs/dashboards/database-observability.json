@@ -430,7 +430,8 @@
                 "value": 80
               }
             ]
-          }
+          },
+          "unit": "qps"
         },
         "overrides": []
       },
@@ -462,9 +463,12 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "last_over_time((sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval]) or rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval])))[$__range:])",
-          "legendFormat": "__auto",
-          "range": true,
+          "exemplar": false,
+          "expr": "last_over_time((sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[5m]) or rate(pg_stat_statements_calls_total{job=~\"$job\"}[5m])))[$__range:])",
+          "format": "time_series",
+          "instant": true,
+          "legendFormat": "",
+          "range": false,
           "refId": "A"
         }
       ],
@@ -480,7 +484,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "dark-orange",
+            "mode": "fixed"
           },
           "custom": {
             "axisBorderShow": false,
@@ -491,8 +496,8 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
+            "fillOpacity": 26,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -505,7 +510,7 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "auto",
             "showValues": false,
             "spanNulls": true,
             "stacking": {
@@ -526,7 +531,7 @@
               }
             ]
           },
-          "unit": "s"
+          "unit": "ms"
         },
         "overrides": []
       },
@@ -554,7 +559,8 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "(sum(rate(mysql_perf_schema_events_statements_seconds_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:]))) / (sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:]))) * 60 or (sum(rate(pg_stat_statements_seconds_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))) / (sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))) * 60",
+          "expr": "(sum(rate(mysql_perf_schema_events_statements_seconds_total{job=~\"$job\", digest=~\".*\", instance=~\"$instance\"}[$__rate_interval:]))) / (sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", instance=~\"$instance\"}[$__rate_interval:]))) * 60 * 60 or (sum(rate(pg_stat_statements_seconds_total{job=~\"$job\", queryid=~\".*\", instance=~\"$instance\" }[$__rate_interval:]))) / (sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", instance=~\"$instance\"}[$__rate_interval:]))) * 60 * 60",
+          "interval": "1m",
           "legendFormat": "duration",
           "range": true,
           "refId": "A"
@@ -666,7 +672,8 @@
       "fieldConfig": {
         "defaults": {
           "color": {
-            "mode": "palette-classic"
+            "fixedColor": "#00e4f7",
+            "mode": "fixed"
           },
           "custom": {
             "axisBorderShow": false,
@@ -677,8 +684,8 @@
             "barAlignment": 0,
             "barWidthFactor": 0.6,
             "drawStyle": "line",
-            "fillOpacity": 0,
-            "gradientMode": "none",
+            "fillOpacity": 31,
+            "gradientMode": "opacity",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
@@ -691,9 +698,9 @@
             "scaleDistribution": {
               "type": "linear"
             },
-            "showPoints": "never",
+            "showPoints": "auto",
             "showValues": false,
-            "spanNulls": true,
+            "spanNulls": false,
             "stacking": {
               "group": "A",
               "mode": "none"
@@ -716,7 +723,7 @@
               }
             ]
           },
-          "unit": "calls/sec"
+          "unit": "query/sec"
         },
         "overrides": []
       },
@@ -744,7 +751,8 @@
       "targets": [
         {
           "editorMode": "code",
-          "expr": "sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", }[$__rate_interval:])) or sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", }[$__rate_interval:]))",
+          "expr": "sum(rate(mysql_perf_schema_events_statements_total{job=~\"$job\", digest=~\".*\", instance=\"$instance\" }[$__rate_interval:])) or sum(rate(pg_stat_statements_calls_total{job=~\"$job\", queryid=~\".*\", instance=\"$instance\"}[$__rate_interval:]))",
+          "interval": "1m",
           "legendFormat": "rate",
           "range": true,
           "refId": "A"
@@ -752,6 +760,441 @@
       ],
       "title": "Rate",
       "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "loki",
+        "uid": "${ds_logs}"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "thresholds"
+          },
+          "custom": {
+            "align": "left",
+            "cellOptions": {
+              "type": "auto"
+            },
+            "filterable": true,
+            "footer": {
+              "reducers": []
+            },
+            "inspect": false,
+            "wrapText": false
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": 0
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Query"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 945
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "query"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 328
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Query"
+            },
+            "properties": [
+              {
+                "id": "custom.width",
+                "value": 700
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Call"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "mode": "basic",
+                  "type": "gauge",
+                  "valueDisplayMode": "color"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "Wait Time"
+            },
+            "properties": [
+              {
+                "id": "custom.cellOptions",
+                "value": {
+                  "type": "color-text"
+                }
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "dark-red",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 12,
+        "w": 24,
+        "x": 0,
+        "y": 13
+      },
+      "id": 15,
+      "options": {
+        "cellHeight": "sm",
+        "enablePagination": true,
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": true,
+            "displayName": "Wait Time"
+          }
+        ]
+      },
+      "pluginVersion": "12.3.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "loki",
+            "uid": "${ds_logs}"
+          },
+          "direction": "backward",
+          "editorMode": "builder",
+          "expr": "{job=\"$job\"} != `SELECT version()`",
+          "queryType": "range",
+          "refId": "A"
+        }
+      ],
+      "title": "Query count",
+      "transformations": [
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "format": "json",
+            "source": "labels"
+          }
+        },
+        {
+          "id": "extractFields",
+          "options": {
+            "delimiter": ",",
+            "keepTime": false,
+            "replace": false,
+            "source": "Line"
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "wait_time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "filterByValue",
+          "options": {
+            "filters": [
+              {
+                "config": {
+                  "id": "isNotNull",
+                  "options": {}
+                },
+                "fieldName": "querytext"
+              },
+              {
+                "config": {
+                  "id": "isNotNull",
+                  "options": {}
+                },
+                "fieldName": "query"
+              }
+            ],
+            "match": "any",
+            "type": "include"
+          }
+        },
+        {
+          "id": "calculateField",
+          "options": {
+            "alias": "Query",
+            "binary": {
+              "left": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "query"
+                }
+              },
+              "right": {
+                "matcher": {
+                  "id": "byName",
+                  "options": "querytext"
+                }
+              }
+            },
+            "mode": "reduceRow",
+            "reduce": {
+              "include": [
+                "querytext",
+                "query"
+              ],
+              "reducer": "lastNotNull"
+            },
+            "replaceFields": false
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              " WITH ENCRYPTED PASSWORD 'o11y_password'": true,
+              "Line": true,
+              "Time": true,
+              "app": true,
+              "backend_time": true,
+              "backend_type": true,
+              "blocked_by_pids": true,
+              "client": true,
+              "cpu_time": true,
+              "detected_level": true,
+              "engine": true,
+              "id": true,
+              "job": true,
+              "labelTypes": true,
+              "labels": true,
+              "leader_pid": true,
+              "level": true,
+              "op": true,
+              "pid": true,
+              "pid (lastNotNull)": true,
+              "query": true,
+              "query_time": false,
+              "queryid": true,
+              "querytext": true,
+              "schema": true,
+              "server_id": true,
+              "service_name": true,
+              "state": true,
+              "table": false,
+              "table_spec": true,
+              "tsNs": true,
+              "user": false,
+              "wait_event_name": true,
+              "wait_time": false,
+              "xact_time": true,
+              "xid": true,
+              "xmin": true
+            },
+            "includeByName": {},
+            "indexByName": {},
+            "renameByName": {
+              "pid (lastNotNull)": "",
+              "query (count)": "Query",
+              "query_time (lastNotNull)": "Query Time",
+              "table (lastNotNull)": "Table",
+              "user (lastNotNull)": "User",
+              "wait_event (lastNotNull)": "Wait event",
+              "wait_event_name (lastNotNull)": "Wait Event name",
+              "wait_event_type (lastNotNull)": "Wait event Type",
+              "wait_time (lastNotNull)": ""
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "query": true,
+              "table": false
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Query": 0,
+              "database": 9,
+              "datname": 3,
+              "instance": 1,
+              "query_time": 2,
+              "table": 4,
+              "user": 8,
+              "wait_event": 7,
+              "wait_event_type": 6,
+              "wait_time": 5
+            },
+            "renameByName": {
+              "datname": "Database",
+              "instance": "Instance",
+              "query": "Query",
+              "query_time": "Query Time",
+              "querytext": "Query",
+              "table": "Table",
+              "user": "User",
+              "wait_event": "Wait event",
+              "wait_event_type": "Wait event type",
+              "wait_time": "Wait time"
+            }
+          }
+        },
+        {
+          "id": "sortBy",
+          "options": {
+            "fields": {},
+            "sort": [
+              {
+                "field": "Wait time"
+              }
+            ]
+          }
+        },
+        {
+          "id": "groupBy",
+          "options": {
+            "fields": {
+              "Database": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Instance": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Query": {
+                "aggregations": [
+                  "count"
+                ],
+                "operation": "groupby"
+              },
+              "Query Time": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Table": {
+                "aggregations": []
+              },
+              "User": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Wait event": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Wait event type": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "Wait time": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "database": {
+                "aggregations": [
+                  "lastNotNull"
+                ]
+              },
+              "schema": {
+                "aggregations": [
+                  "lastNotNull"
+                ],
+                "operation": "aggregate"
+              },
+              "table_spec": {
+                "aggregations": []
+              }
+            }
+          }
+        },
+        {
+          "id": "organize",
+          "options": {
+            "excludeByName": {
+              "Table (lastNotNull)": true,
+              "database (lastNotNull)": true
+            },
+            "includeByName": {},
+            "indexByName": {
+              "Database (lastNotNull)": 7,
+              "Instance (lastNotNull)": 2,
+              "Query": 0,
+              "Query (count)": 1,
+              "Query Time (lastNotNull)": 6,
+              "Table (lastNotNull)": 8,
+              "User (lastNotNull)": 9,
+              "Wait event (lastNotNull)": 4,
+              "Wait event type (lastNotNull)": 5,
+              "Wait time (lastNotNull)": 3
+            },
+            "renameByName": {
+              "Database (lastNotNull)": "Database",
+              "Instance (lastNotNull)": "Instance",
+              "Query": "🐬 Query",
+              "Query (count)": "Call",
+              "Query Time (lastNotNull)": "Query Time",
+              "Table (lastNotNull)": "Table",
+              "User (lastNotNull)": "User",
+              "Wait event (lastNotNull)": "Wait event",
+              "Wait event type (lastNotNull)": "Wait Event Type",
+              "Wait time (lastNotNull)": "Wait Time",
+              "database (lastNotNull)": "Database"
+            }
+          }
+        }
+      ],
+      "type": "table"
     },
     {
       "datasource": {
@@ -770,29 +1213,16 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -820,21 +1250,30 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 13
+        "y": 25
       },
       "id": 9,
       "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.3.0",
       "targets": [
@@ -852,7 +1291,7 @@
         }
       ],
       "title": "Cumulative duration of wait events by group / type",
-      "type": "timeseries"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -871,29 +1310,16 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -921,21 +1347,30 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 20
+        "y": 32
       },
       "id": 11,
       "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.3.0",
       "targets": [
@@ -953,7 +1388,7 @@
         }
       ],
       "title": "Wait Events Duration Breakdown",
-      "type": "timeseries"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -972,29 +1407,16 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1022,21 +1444,30 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 27
+        "y": 39
       },
       "id": 12,
       "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.3.0",
       "targets": [
@@ -1054,7 +1485,7 @@
         }
       ],
       "title": "Wait events duration by group",
-      "type": "timeseries"
+      "type": "barchart"
     },
     {
       "datasource": {
@@ -1073,29 +1504,16 @@
             "axisColorMode": "text",
             "axisLabel": "",
             "axisPlacement": "auto",
-            "barAlignment": 0,
-            "barWidthFactor": 0.6,
-            "drawStyle": "bars",
-            "fillOpacity": 0,
+            "fillOpacity": 80,
             "gradientMode": "none",
             "hideFrom": {
               "legend": false,
               "tooltip": false,
               "viz": false
             },
-            "insertNulls": false,
-            "lineInterpolation": "linear",
             "lineWidth": 1,
-            "pointSize": 5,
             "scaleDistribution": {
               "type": "linear"
-            },
-            "showPoints": "auto",
-            "showValues": false,
-            "spanNulls": false,
-            "stacking": {
-              "group": "A",
-              "mode": "none"
             },
             "thresholdsStyle": {
               "mode": "off"
@@ -1122,21 +1540,30 @@
         "h": 7,
         "w": 24,
         "x": 0,
-        "y": 34
+        "y": 46
       },
       "id": 10,
       "options": {
+        "barRadius": 0,
+        "barWidth": 0.97,
+        "fullHighlight": false,
+        "groupWidth": 0.7,
         "legend": {
           "calcs": [],
           "displayMode": "list",
           "placement": "bottom",
           "showLegend": true
         },
+        "orientation": "auto",
+        "showValue": "auto",
+        "stacking": "none",
         "tooltip": {
           "hideZeros": false,
           "mode": "single",
           "sort": "none"
-        }
+        },
+        "xTickLabelRotation": 0,
+        "xTickLabelSpacing": 0
       },
       "pluginVersion": "12.3.0",
       "targets": [
@@ -1154,7 +1581,7 @@
         }
       ],
       "title": "Number of wait events",
-      "type": "timeseries"
+      "type": "barchart"
     }
   ],
   "preload": false,
@@ -1212,16 +1639,34 @@
         "refresh": 1,
         "regex": "",
         "type": "query"
+      },
+      {
+        "current": {
+          "text": "pg_test",
+          "value": "pg_test"
+        },
+        "definition": "label_values(database_observability_connection_info,instance)",
+        "label": "instance",
+        "name": "instance",
+        "options": [],
+        "query": {
+          "qryType": 1,
+          "query": "label_values(database_observability_connection_info,instance)",
+          "refId": "PrometheusVariableQueryEditor-VariableQuery"
+        },
+        "refresh": 1,
+        "regex": "",
+        "type": "query"
       }
     ]
   },
   "time": {
-    "from": "now-30m",
+    "from": "now-15m",
     "to": "now"
   },
   "timepicker": {},
   "timezone": "browser",
   "title": "Database Observability - Queries overview",
   "uid": "ad6sc77",
-  "version": 69
+  "version": 111
 }

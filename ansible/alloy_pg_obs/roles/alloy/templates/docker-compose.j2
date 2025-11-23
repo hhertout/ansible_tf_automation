@@ -23,6 +23,11 @@ services:
 {% for db in postgres_databases_with_conn %}
       - POSTGRES_DSN_{{ db.name | upper }}=postgres://{{ monitoring_user }}:{{ monitoring_password }}@{{ db.alloy_host }}:{{ db.port }}/{{ db.database }}?sslmode=disable
 {% endfor %}
+      - GCLOUD_HOSTED_METRICS_URL={{ gcloud_hosted.metric_url }}
+      - GCLOUD_HOSTED_METRICS_ID={{ gcloud_hosted.metric_id }}
+      - GCLOUD_HOSTED_LOGS_URL={{ gcloud_hosted.log_url }}
+      - GCLOUD_HOSTED_LOGS_ID={{ gcloud_hosted.log_id }}
+      - GCLOUD_RW_API_KEY={{ gcloud_hosted.api_key }}
     networks:
       - testdata_monitoring
 

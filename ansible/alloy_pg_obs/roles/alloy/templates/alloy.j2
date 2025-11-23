@@ -17,7 +17,7 @@ database_observability.postgres "postgres_{{ db.name }}" {
 }
 
 loki.relabel "database_observability_postgres_{{ db.name }}" {
-  forward_to = [loki.write.logs_service.receiver]
+  forward_to = [loki.write.logs_service.receiver, loki.write.gc_logs_service.receiver]
 
   rule {
     target_label = "instance"
@@ -26,7 +26,7 @@ loki.relabel "database_observability_postgres_{{ db.name }}" {
 
   rule {
     target_label = "job"
-    replacement  = "integrations/db-{{ db.name }}"
+    replacement  = "integrations/db-o11y"
   }
 }
 
@@ -35,7 +35,7 @@ discovery.relabel "database_observability_postgres_{{ db.name }}" {
 
   rule {
     target_label = "job"
-    replacement  = "integrations/db-{{ db.name }}"
+    replacement  = "integrations/db-o11y"
   }
 
   rule {
@@ -47,7 +47,7 @@ discovery.relabel "database_observability_postgres_{{ db.name }}" {
 prometheus.scrape "database_observability_postgres_{{ db.name }}" {
   targets    = discovery.relabel.database_observability_postgres_{{ db.name }}.output
   job_name   = "integrations/{{ db.name }}"
-  forward_to = [prometheus.remote_write.metrics_service.receiver]
+  forward_to = [prometheus.remote_write.metrics_service.receiver, prometheus.remote_write.gc_metrics_service.receiver]
 }
 {% endfor %}
 
@@ -84,6 +84,28 @@ loki.write "logs_service" {
 
     queue_config {
       capacity = "10MiB"
+    }
+  }
+}
+
+prometheus.remote_write "gc_metrics_service" {
+  endpoint {
+    url = sys.env("GCLOUD_HOSTED_METRICS_URL")
+
+    basic_auth {
+      password = sys.env("GCLOUD_RW_API_KEY")
+      username = sys.env("GCLOUD_HOSTED_METRICS_ID")
+    }
+  }
+}
+
+loki.write "gc_logs_service" {
+  endpoint {
+    url = sys.env("GCLOUD_HOSTED_LOGS_URL")
+
+    basic_auth {
+      password = sys.env("GCLOUD_RW_API_KEY")
+      username = sys.env("GCLOUD_HOSTED_LOGS_ID")
     }
   }
 }
